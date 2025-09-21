@@ -23,11 +23,27 @@ internal class GildedRoseTest {
     }
 
     @Test
-    fun `quality is decrementedby 1 each day when sellIn is greater than 0`() {
+    fun `quality is decremented by 1 each day when sellIn is greater than 0`() {
         val app = GildedRose(listOf(Item("+5 Dexterity Vest", 10, 20)))
 
         app.updateQuality()
         assertEquals(19, app.items[0].quality)
+    }
+
+    @Test
+    fun `once the sell by date has passed, quality degrades twice as fast`() {
+        val app = GildedRose(listOf(Item("+5 Dexterity Vest", 0, 10)))
+
+        app.updateQuality()
+        assertEquals(8, app.items[0].quality)
+    }
+
+    @Test
+    fun `the quality of an item is never negative`() {
+        val app = GildedRose(listOf(Item("+5 Dexterity Vest", 1, 0)))
+
+        app.updateQuality()
+        assertEquals(0, app.items[0].quality)
     }
 }
 
