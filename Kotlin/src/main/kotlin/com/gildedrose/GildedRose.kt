@@ -37,6 +37,8 @@ class GildedRose(val items: List<Item>) {
     private fun Item.updateQuality() {
         val type = ItemType.of(name)
 
+        sellIn = type.getUpdatedSellIn(this)
+
         if (type == AGED_BRIE) {
             if (quality < 50) {
                 quality = quality + 1
@@ -45,13 +47,13 @@ class GildedRose(val items: List<Item>) {
             if (quality < 50) {
                 quality = quality + 1
 
-                if (sellIn < 11) {
+                if (sellIn < 10) {
                     if (quality < 50) {
                         quality = quality + 1
                     }
                 }
 
-                if (sellIn < 6) {
+                if (sellIn < 5) {
                     if (quality < 50) {
                         quality = quality + 1
                     }
@@ -65,7 +67,6 @@ class GildedRose(val items: List<Item>) {
             }
         }
 
-        sellIn = type.getUpdatedSellIn(this)
 
         if (type == SULFURAS) {
             // Do nothing
