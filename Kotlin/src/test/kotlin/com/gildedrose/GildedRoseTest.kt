@@ -69,5 +69,15 @@ internal class GildedRoseTest {
         Item("Backstage passes to a TAFKAL80ETC concert", 0, 50).updateQuality().quality shouldBe 0
     }
 
+    @Test
+    fun `Conjured items degrade in quality twice as fast before sell by date`() {
+        Item("Conjured Mana Cake", 10, 10).updateQuality().quality shouldBe 8
+    }
+
+    @Test
+    fun `Conjured items degrade in quality twice as fast after sell by date`() {
+        Item("Conjured Mana Cake", 0, 10).updateQuality().quality shouldBe 6
+    }
+
     private fun Item.updateQuality() = GildedRose(listOf(this)).also { it.updateQuality() }.items[0]
 }

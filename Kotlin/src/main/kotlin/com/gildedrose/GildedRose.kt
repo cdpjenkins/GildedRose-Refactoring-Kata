@@ -32,14 +32,20 @@ enum class ItemType {
             return min(updatedQuality, 50)
         }
     },
+    CONJURED {
+        override fun getUpdatedQuality(item: Item): Int {
+            val updatedQuality =
+                if (item.sellIn < 0) item.quality - 4
+                else item.quality - 2
+
+            return max(updatedQuality, 0)
+        }
+    },
     OTHER {
         override fun getUpdatedQuality(item: Item): Int {
             val updatedQuality =
-                if (item.sellIn < 0) {
-                    item.quality - 2
-                } else {
-                    item.quality - 1
-                }
+                if (item.sellIn < 0) item.quality - 2
+                else item.quality - 1
 
             return max(updatedQuality, 0)
         }
@@ -53,6 +59,7 @@ enum class ItemType {
             if (name.startsWith("Sulfuras")) SULFURAS
             else if (name.startsWith("Aged Brie")) AGED_BRIE
             else if (name.startsWith("Backstage passes")) BACKSTAGE_PASSES
+            else if (name.startsWith("Conjured")) CONJURED
             else OTHER
     }
 }
