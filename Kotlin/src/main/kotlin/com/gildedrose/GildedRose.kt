@@ -1,7 +1,27 @@
 package com.gildedrose
 
-class GildedRose(val items: List<Item>) {
+import com.gildedrose.ItemType.SULFURAS
+import com.gildedrose.ItemType.AGED_BRIE
+import com.gildedrose.ItemType.BACKSTAGE_PASSES
 
+enum class ItemType {
+    SULFURAS,
+    AGED_BRIE,
+    BACKSTAGE_PASSES,
+    OTHER;
+
+    companion object {
+        fun of(name: String): ItemType =
+            when (name) {
+                "Sulfuras, Hand of Ragnaros" -> SULFURAS
+                "Aged Brie" -> AGED_BRIE
+                "Backstage passes to a TAFKAL80ETC concert" -> BACKSTAGE_PASSES
+                else -> OTHER
+            }
+    }
+}
+
+class GildedRose(val items: List<Item>) {
     fun updateQuality() {
         for (item in items) {
             item.updateQuality()
@@ -9,11 +29,13 @@ class GildedRose(val items: List<Item>) {
     }
 
     private fun Item.updateQuality() {
-        if ((isAgedBrie(this)) || (isBackstagePasses(this))) {
+        val type = ItemType.of(name)
+
+        if ((type == AGED_BRIE) || (type == BACKSTAGE_PASSES)) {
             if (quality < 50) {
                 quality = quality + 1
 
-                if (isBackstagePasses(this)) {
+                if (ItemType.of(name) == BACKSTAGE_PASSES) {
                     if (sellIn < 11) {
                         if (quality < 50) {
                             quality = quality + 1
@@ -29,27 +51,27 @@ class GildedRose(val items: List<Item>) {
             }
         } else {
             if (quality > 0) {
-                if (!isSulfuras(this)) {
+                if (!(ItemType.of(name) == SULFURAS)) {
                     quality = quality - 1
                 }
             }
         }
 
-        if (!(isSulfuras(this))) {
+        if (!(ItemType.of(name) == SULFURAS)) {
             sellIn = sellIn - 1
         }
 
         if (sellIn < 0) {
-            if (isAgedBrie(this)) {
+            if (ItemType.of(name) == AGED_BRIE) {
                 if (quality < 50) {
                     quality = quality + 1
                 }
             } else {
-                if (isBackstagePasses(this)) {
+                if (ItemType.of(name) == BACKSTAGE_PASSES) {
                     quality = 0
                 } else {
                     if (quality > 0) {
-                        if (!isSulfuras(this)) {
+                        if (!(ItemType.of(name) == SULFURAS)) {
                             quality = quality - 1
                         }
                     }
@@ -58,7 +80,3 @@ class GildedRose(val items: List<Item>) {
         }
     }
 }
-
-private fun isSulfuras(item: Item): Boolean = item.name == "Sulfuras, Hand of Ragnaros"
-private fun isBackstagePasses(item: Item): Boolean = item.name == "Backstage passes to a TAFKAL80ETC concert"
-private fun isAgedBrie(item: Item): Boolean = item.name == "Aged Brie"
