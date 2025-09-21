@@ -51,21 +51,15 @@ class GildedRose(val items: List<Item>) {
                 quality = min(updatedQuality, 50)
             }
             BACKSTAGE_PASSES -> {
-                if (quality < 50) {
-                    quality = quality + 1
-
-                    if (sellIn < 10) {
-                        if (quality < 50) {
-                            quality = quality + 1
-                        }
-                    }
-
-                    if (sellIn < 5) {
-                        if (quality < 50) {
-                            quality = quality + 1
-                        }
-                    }
+                val updatedQuality = if (sellIn < 5) {
+                    quality + 3
+                } else if (sellIn < 10) {
+                    quality + 2
+                } else {
+                    quality + 1
                 }
+
+                quality = min(updatedQuality, 50)
             }
             SULFURAS -> {
                 quality = quality
