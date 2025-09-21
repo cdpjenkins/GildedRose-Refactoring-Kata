@@ -24,13 +24,13 @@ class GildedRose(val items: List<Item>) {
                 }
             } else {
                 if (item.quality > 0) {
-                    if (item.name != "Sulfuras, Hand of Ragnaros") {
+                    if (!isSulfuras(item)) {
                         item.quality = item.quality - 1
                     }
                 }
             }
 
-            if (item.name != "Sulfuras, Hand of Ragnaros") {
+            if (!(isSulfuras(item))) {
                 item.sellIn = item.sellIn - 1
             }
 
@@ -41,10 +41,10 @@ class GildedRose(val items: List<Item>) {
                     }
                 } else {
                     if (isBackstagePasses(item)) {
-                        item.quality = item.quality - item.quality
+                        item.quality = 0
                     } else {
                         if (item.quality > 0) {
-                            if (item.name != "Sulfuras, Hand of Ragnaros") {
+                            if (!isSulfuras(item)) {
                                 item.quality = item.quality - 1
                             }
                         }
@@ -55,6 +55,6 @@ class GildedRose(val items: List<Item>) {
     }
 }
 
+private fun isSulfuras(item: Item): Boolean = item.name == "Sulfuras, Hand of Ragnaros"
 private fun isBackstagePasses(item: Item): Boolean = item.name == "Backstage passes to a TAFKAL80ETC concert"
 private fun isAgedBrie(item: Item): Boolean = item.name == "Aged Brie"
-
