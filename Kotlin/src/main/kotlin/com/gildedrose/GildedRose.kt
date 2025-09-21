@@ -3,6 +3,7 @@ package com.gildedrose
 import com.gildedrose.ItemType.SULFURAS
 import com.gildedrose.ItemType.AGED_BRIE
 import com.gildedrose.ItemType.BACKSTAGE_PASSES
+import kotlin.math.min
 
 enum class ItemType {
     SULFURAS {
@@ -39,29 +40,38 @@ class GildedRose(val items: List<Item>) {
 
         sellIn = type.getUpdatedSellIn(this)
 
-        if (type == AGED_BRIE) {
-            if (quality < 50) {
-                quality = quality + 1
-            }
-        } else if (type == BACKSTAGE_PASSES) {
-            if (quality < 50) {
-                quality = quality + 1
-
-                if (sellIn < 10) {
-                    if (quality < 50) {
-                        quality = quality + 1
-                    }
+        when (type) {
+            AGED_BRIE -> {
+                val updatedQuality = if (sellIn >= 0) {
+                    quality + 1
+                } else {
+                    quality + 2
                 }
 
-                if (sellIn < 5) {
-                    if (quality < 50) {
-                        quality = quality + 1
+                quality = min(updatedQuality, 50)
+            }
+            BACKSTAGE_PASSES -> {
+                if (quality < 50) {
+                    quality = quality + 1
+
+                    if (sellIn < 10) {
+                        if (quality < 50) {
+                            quality = quality + 1
+                        }
+                    }
+
+                    if (sellIn < 5) {
+                        if (quality < 50) {
+                            quality = quality + 1
+                        }
                     }
                 }
             }
-        } else {
-            if (quality > 0) {
-                if (!(type == SULFURAS)) {
+            SULFURAS -> {
+                quality = quality
+            }
+            else -> {
+                if (quality > 0) {
                     quality = quality - 1
                 }
             }
@@ -73,9 +83,7 @@ class GildedRose(val items: List<Item>) {
         } else {
             if (sellIn < 0) {
                 if (type == AGED_BRIE) {
-                    if (quality < 50) {
-                        quality = quality + 1
-                    }
+                    // blank
                 } else {
                     if (type == BACKSTAGE_PASSES) {
                         quality = 0
