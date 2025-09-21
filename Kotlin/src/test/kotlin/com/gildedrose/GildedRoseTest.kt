@@ -11,11 +11,10 @@ internal class GildedRoseTest {
         val app = GildedRose(items)
         app.updateQuality()
         assertEquals("foo", app.items[0].name)
-
     }
 
     @Test
-    fun `sellIn is decremented by 1each day`() {
+    fun `sellIn is decremented by 1 each day`() {
         val app = GildedRose(listOf(Item("+5 Dexterity Vest", 10, 20)))
 
         app.updateQuality()
