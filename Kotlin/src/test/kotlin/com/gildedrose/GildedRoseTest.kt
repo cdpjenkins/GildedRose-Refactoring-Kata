@@ -30,8 +30,13 @@ internal class GildedRoseTest {
     }
 
     @Test
-    fun `Aged Bries actually increases in Quality the older it gets`() {
+    fun `Aged Bries actually increases in quality the older it gets`() {
         Item("Aged Brie", 2, 0).updateQuality().quality shouldBe 1
+    }
+
+    @Test
+    fun `Aged Bries increases in quality twice as fast once the sell by date has passed`() {
+        Item("Aged Brie", -1, 0).updateQuality().quality shouldBe 2
     }
 
     @Test

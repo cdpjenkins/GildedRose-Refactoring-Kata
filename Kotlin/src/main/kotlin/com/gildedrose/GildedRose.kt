@@ -37,21 +37,23 @@ class GildedRose(val items: List<Item>) {
     private fun Item.updateQuality() {
         val type = ItemType.of(name)
 
-        if ((type == AGED_BRIE) || (type == BACKSTAGE_PASSES)) {
+        if (type == AGED_BRIE) {
+            if (quality < 50) {
+                quality = quality + 1
+            }
+        } else if (type == BACKSTAGE_PASSES) {
             if (quality < 50) {
                 quality = quality + 1
 
-                if (type == BACKSTAGE_PASSES) {
-                    if (sellIn < 11) {
-                        if (quality < 50) {
-                            quality = quality + 1
-                        }
+                if (sellIn < 11) {
+                    if (quality < 50) {
+                        quality = quality + 1
                     }
+                }
 
-                    if (sellIn < 6) {
-                        if (quality < 50) {
-                            quality = quality + 1
-                        }
+                if (sellIn < 6) {
+                    if (quality < 50) {
+                        quality = quality + 1
                     }
                 }
             }
