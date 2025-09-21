@@ -50,12 +50,10 @@ enum class ItemType {
 
     companion object {
         fun of(name: String): ItemType =
-            when (name) {
-                "Sulfuras, Hand of Ragnaros" -> SULFURAS
-                "Aged Brie" -> AGED_BRIE
-                "Backstage passes to a TAFKAL80ETC concert" -> BACKSTAGE_PASSES
-                else -> OTHER
-            }
+            if (name.startsWith("Sulfuras")) SULFURAS
+            else if (name.startsWith("Aged Brie")) AGED_BRIE
+            else if (name.startsWith("Backstage passes")) BACKSTAGE_PASSES
+            else OTHER
     }
 }
 
