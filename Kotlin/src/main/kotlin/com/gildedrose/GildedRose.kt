@@ -4,49 +4,53 @@ class GildedRose(val items: List<Item>) {
 
     fun updateQuality() {
         for (item in items) {
-            if ((isAgedBrie(item)) || (isBackstagePasses(item))) {
-                if (item.quality < 50) {
-                    item.quality = item.quality + 1
+            item.updateQuality()
+        }
+    }
 
-                    if (isBackstagePasses(item)) {
-                        if (item.sellIn < 11) {
-                            if (item.quality < 50) {
-                                item.quality = item.quality + 1
-                            }
-                        }
+    private fun Item.updateQuality() {
+        if ((isAgedBrie(this)) || (isBackstagePasses(this))) {
+            if (quality < 50) {
+                quality = quality + 1
 
-                        if (item.sellIn < 6) {
-                            if (item.quality < 50) {
-                                item.quality = item.quality + 1
-                            }
+                if (isBackstagePasses(this)) {
+                    if (sellIn < 11) {
+                        if (quality < 50) {
+                            quality = quality + 1
                         }
                     }
+
+                    if (sellIn < 6) {
+                        if (quality < 50) {
+                            quality = quality + 1
+                        }
+                    }
+                }
+            }
+        } else {
+            if (quality > 0) {
+                if (!isSulfuras(this)) {
+                    quality = quality - 1
+                }
+            }
+        }
+
+        if (!(isSulfuras(this))) {
+            sellIn = sellIn - 1
+        }
+
+        if (sellIn < 0) {
+            if (isAgedBrie(this)) {
+                if (quality < 50) {
+                    quality = quality + 1
                 }
             } else {
-                if (item.quality > 0) {
-                    if (!isSulfuras(item)) {
-                        item.quality = item.quality - 1
-                    }
-                }
-            }
-
-            if (!(isSulfuras(item))) {
-                item.sellIn = item.sellIn - 1
-            }
-
-            if (item.sellIn < 0) {
-                if (isAgedBrie(item)) {
-                    if (item.quality < 50) {
-                        item.quality = item.quality + 1
-                    }
+                if (isBackstagePasses(this)) {
+                    quality = 0
                 } else {
-                    if (isBackstagePasses(item)) {
-                        item.quality = 0
-                    } else {
-                        if (item.quality > 0) {
-                            if (!isSulfuras(item)) {
-                                item.quality = item.quality - 1
-                            }
+                    if (quality > 0) {
+                        if (!isSulfuras(this)) {
+                            quality = quality - 1
                         }
                     }
                 }
