@@ -4,7 +4,6 @@ import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
 internal class GildedRoseTest {
-
     @Test
     fun `Item's name remains unchanged`() {
         Item("foo", 0, 0).updateQuality().name shouldBe "foo"
