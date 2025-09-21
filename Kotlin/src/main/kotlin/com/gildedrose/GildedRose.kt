@@ -5,12 +5,16 @@ import com.gildedrose.ItemType.AGED_BRIE
 import com.gildedrose.ItemType.BACKSTAGE_PASSES
 
 enum class ItemType {
-    SULFURAS,
+    SULFURAS {
+        override fun getUpdatedSellIn(item: Item): Int = item.sellIn
+    },
     AGED_BRIE,
     BACKSTAGE_PASSES,
     OTHER;
 
-    fun getUpdatedSellIn(item: Item): Int = if ((this == SULFURAS)) item.sellIn else item.sellIn - 1
+    open fun getUpdatedSellIn(item: Item): Int = item.sellIn - 1
+
+
 
     companion object {
         fun of(name: String): ItemType =
