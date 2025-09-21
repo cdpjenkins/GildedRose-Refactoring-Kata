@@ -10,6 +10,8 @@ enum class ItemType {
     BACKSTAGE_PASSES,
     OTHER;
 
+    fun getUpdatedSellIn(item: Item): Int = if ((this == SULFURAS)) item.sellIn else item.sellIn - 1
+
     companion object {
         fun of(name: String): ItemType =
             when (name) {
@@ -35,7 +37,7 @@ class GildedRose(val items: List<Item>) {
             if (quality < 50) {
                 quality = quality + 1
 
-                if (ItemType.of(name) == BACKSTAGE_PASSES) {
+                if (type == BACKSTAGE_PASSES) {
                     if (sellIn < 11) {
                         if (quality < 50) {
                             quality = quality + 1
@@ -51,27 +53,27 @@ class GildedRose(val items: List<Item>) {
             }
         } else {
             if (quality > 0) {
-                if (!(ItemType.of(name) == SULFURAS)) {
+                if (!(type == SULFURAS)) {
                     quality = quality - 1
                 }
             }
         }
 
-        if (!(ItemType.of(name) == SULFURAS)) {
-            sellIn = sellIn - 1
-        }
+        sellIn = type.getUpdatedSellIn(this)
 
-        if (sellIn < 0) {
-            if (ItemType.of(name) == AGED_BRIE) {
-                if (quality < 50) {
-                    quality = quality + 1
-                }
-            } else {
-                if (ItemType.of(name) == BACKSTAGE_PASSES) {
-                    quality = 0
+        if (type == SULFURAS) {
+            // Do nothing
+        } else {
+            if (sellIn < 0) {
+                if (type == AGED_BRIE) {
+                    if (quality < 50) {
+                        quality = quality + 1
+                    }
                 } else {
-                    if (quality > 0) {
-                        if (!(ItemType.of(name) == SULFURAS)) {
+                    if (type == BACKSTAGE_PASSES) {
+                        quality = 0
+                    } else {
+                        if (quality > 0) {
                             quality = quality - 1
                         }
                     }
@@ -80,3 +82,4 @@ class GildedRose(val items: List<Item>) {
         }
     }
 }
+
