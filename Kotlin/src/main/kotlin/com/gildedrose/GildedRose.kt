@@ -3,6 +3,7 @@ package com.gildedrose
 import com.gildedrose.ItemType.SULFURAS
 import com.gildedrose.ItemType.AGED_BRIE
 import com.gildedrose.ItemType.BACKSTAGE_PASSES
+import kotlin.math.max
 import kotlin.math.min
 
 enum class ItemType {
@@ -40,53 +41,37 @@ class GildedRose(val items: List<Item>) {
 
         sellIn = type.getUpdatedSellIn(this)
 
-        when (type) {
+        quality = when (type) {
             AGED_BRIE -> {
-                val updatedQuality = if (sellIn >= 0) {
-                    quality + 1
-                } else {
-                    quality + 2
-                }
+                val updatedQuality =
+                    if (sellIn >= 0) quality + 1
+                    else quality + 2
 
-                quality = min(updatedQuality, 50)
+                min(updatedQuality, 50)
             }
             BACKSTAGE_PASSES -> {
-                val updatedQuality = if (sellIn < 5) {
-                    quality + 3
-                } else if (sellIn < 10) {
-                    quality + 2
-                } else {
-                    quality + 1
-                }
+                val updatedQuality =
+                    when {
+                        sellIn < 0 -> 0
+                        sellIn < 5 -> quality + 3
+                        sellIn < 10 -> quality + 2
+                        else -> quality + 1
+                    }
 
-                quality = min(updatedQuality, 50)
+                min(updatedQuality, 50)
             }
             SULFURAS -> {
-                quality = quality
+                quality
             }
             else -> {
-                if (quality > 0) {
-                    quality = quality - 1
-                }
-            }
-        }
-
-
-        if (type == SULFURAS) {
-            // Do nothing
-        } else {
-            if (sellIn < 0) {
-                if (type == AGED_BRIE) {
-                    // blank
-                } else {
-                    if (type == BACKSTAGE_PASSES) {
-                        quality = 0
+                val updatedQuality =
+                    if (sellIn < 0) {
+                        quality - 2
                     } else {
-                        if (quality > 0) {
-                            quality = quality - 1
-                        }
+                        quality - 1
                     }
-                }
+
+                max(updatedQuality, 0)
             }
         }
     }
