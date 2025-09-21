@@ -1,22 +1,52 @@
 package com.gildedrose
 
-import com.gildedrose.ItemType.SULFURAS
-import com.gildedrose.ItemType.AGED_BRIE
-import com.gildedrose.ItemType.BACKSTAGE_PASSES
 import kotlin.math.max
 import kotlin.math.min
 
 enum class ItemType {
     SULFURAS {
         override fun getUpdatedSellIn(item: Item): Int = item.sellIn
+        override fun getUpdatedQuality(item: Item): Int {
+            return item.quality
+        }
     },
-    AGED_BRIE,
-    BACKSTAGE_PASSES,
-    OTHER;
+    AGED_BRIE {
+        override fun getUpdatedQuality(item: Item): Int {
+            val updatedQuality =
+                if (item.sellIn >= 0) item.quality + 1
+                else item.quality + 2
+
+            return min(updatedQuality, 50)
+        }
+    },
+    BACKSTAGE_PASSES {
+        override fun getUpdatedQuality(item: Item): Int {
+            val updatedQuality =
+                when {
+                    item.sellIn < 0 -> 0
+                    item.sellIn < 5 -> item.quality + 3
+                    item.sellIn < 10 -> item.quality + 2
+                    else -> item.quality + 1
+                }
+
+            return min(updatedQuality, 50)
+        }
+    },
+    OTHER {
+        override fun getUpdatedQuality(item: Item): Int {
+            val updatedQuality =
+                if (item.sellIn < 0) {
+                    item.quality - 2
+                } else {
+                    item.quality - 1
+                }
+
+            return max(updatedQuality, 0)
+        }
+    };
 
     open fun getUpdatedSellIn(item: Item): Int = item.sellIn - 1
-
-
+    abstract fun getUpdatedQuality(item: Item): Int
 
     companion object {
         fun of(name: String): ItemType =
@@ -40,40 +70,6 @@ class GildedRose(val items: List<Item>) {
         val type = ItemType.of(name)
 
         sellIn = type.getUpdatedSellIn(this)
-
-        quality = when (type) {
-            AGED_BRIE -> {
-                val updatedQuality =
-                    if (sellIn >= 0) quality + 1
-                    else quality + 2
-
-                min(updatedQuality, 50)
-            }
-            BACKSTAGE_PASSES -> {
-                val updatedQuality =
-                    when {
-                        sellIn < 0 -> 0
-                        sellIn < 5 -> quality + 3
-                        sellIn < 10 -> quality + 2
-                        else -> quality + 1
-                    }
-
-                min(updatedQuality, 50)
-            }
-            SULFURAS -> {
-                quality
-            }
-            else -> {
-                val updatedQuality =
-                    if (sellIn < 0) {
-                        quality - 2
-                    } else {
-                        quality - 1
-                    }
-
-                max(updatedQuality, 0)
-            }
-        }
+        quality = type.getUpdatedQuality(this)
     }
 }
-
