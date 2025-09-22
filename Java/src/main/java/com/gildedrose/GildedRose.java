@@ -7,28 +7,68 @@ abstract class ItemUpdater {
 class AgedBrieUpdater extends ItemUpdater {
     @Override
     void update(Item item) {
-        GildedRose.updateAgedBrie(item);
+        if (item.quality < 50) {
+            item.quality = item.quality + 1;
+        }
+
+        item.sellIn = item.sellIn - 1;
+
+        if (item.sellIn < 0) {
+            if (item.quality < 50) {
+                item.quality = item.quality + 1;
+            }
+        }
     }
 }
 
 class BackstagePassesUpdater extends ItemUpdater {
     @Override
     void update(Item item) {
-        GildedRose.updateBackstagePasses(item);
+        if (item.quality < 50) {
+            item.quality = item.quality + 1;
+
+            if (item.sellIn < 11) {
+                if (item.quality < 50) {
+                    item.quality = item.quality + 1;
+                }
+            }
+
+            if (item.sellIn < 6) {
+                if (item.quality < 50) {
+                    item.quality = item.quality + 1;
+                }
+            }
+        }
+
+        item.sellIn = item.sellIn - 1;
+
+        if (item.sellIn < 0) {
+            item.quality = 0;
+        }
     }
 }
 
 class SulfurasUpdater extends ItemUpdater {
     @Override
     void update(Item item) {
-        GildedRose.updateSulfuras();
+        // do nothing
     }
 }
 
 class OtherUpdater extends ItemUpdater {
     @Override
     void update(Item item) {
-        GildedRose.updateOther(item);
+        if (item.quality > 0) {
+            item.quality = item.quality - 1;
+        }
+
+        item.sellIn = item.sellIn - 1;
+
+        if (item.sellIn < 0) {
+            if (item.quality > 0) {
+                item.quality = item.quality - 1;
+            }
+        }
     }
 }
 
@@ -64,59 +104,4 @@ class GildedRose {
         updater.update(item);
     }
 
-    static void updateOther(Item item) {
-        if (item.quality > 0) {
-            item.quality = item.quality - 1;
-        }
-
-        item.sellIn = item.sellIn - 1;
-
-        if (item.sellIn < 0) {
-            if (item.quality > 0) {
-                item.quality = item.quality - 1;
-            }
-        }
-    }
-
-    static void updateSulfuras() {
-        // do nothing
-    }
-
-    static void updateBackstagePasses(Item item) {
-        if (item.quality < 50) {
-            item.quality = item.quality + 1;
-
-            if (item.sellIn < 11) {
-                if (item.quality < 50) {
-                    item.quality = item.quality + 1;
-                }
-            }
-
-            if (item.sellIn < 6) {
-                if (item.quality < 50) {
-                    item.quality = item.quality + 1;
-                }
-            }
-        }
-
-        item.sellIn = item.sellIn - 1;
-
-        if (item.sellIn < 0) {
-            item.quality = 0;
-        }
-    }
-
-    static void updateAgedBrie(Item item) {
-        if (item.quality < 50) {
-            item.quality = item.quality + 1;
-        }
-
-        item.sellIn = item.sellIn - 1;
-
-        if (item.sellIn < 0) {
-            if (item.quality < 50) {
-                item.quality = item.quality + 1;
-            }
-        }
-    }
 }
