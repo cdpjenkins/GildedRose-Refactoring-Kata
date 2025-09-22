@@ -7,17 +7,15 @@ abstract class ItemUpdater {
 class AgedBrieUpdater extends ItemUpdater {
     @Override
     void update(Item item) {
-        if (item.quality < 50) {
-            item.quality = item.quality + 1;
-        }
-
         item.sellIn = item.sellIn - 1;
 
         if (item.sellIn < 0) {
-            if (item.quality < 50) {
-                item.quality = item.quality + 1;
-            }
+            item.quality += 2;
+        } else {
+            item.quality += 1;
         }
+
+        item.quality = Math.min(50, item.quality);
     }
 }
 
@@ -50,17 +48,15 @@ class SulfurasUpdater extends ItemUpdater {
 class OtherUpdater extends ItemUpdater {
     @Override
     void update(Item item) {
-        if (item.quality > 0) {
-            item.quality = item.quality - 1;
-        }
-
         item.sellIn = item.sellIn - 1;
 
         if (item.sellIn < 0) {
-            if (item.quality > 0) {
-                item.quality = item.quality - 1;
-            }
+            item.quality = item.quality - 2;
+        } else {
+            item.quality = item.quality - 1;
         }
+
+        item.quality = Math.max(0, item.quality);
     }
 }
 
