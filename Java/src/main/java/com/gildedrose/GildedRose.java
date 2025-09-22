@@ -1,7 +1,45 @@
 package com.gildedrose;
 
+class GildedRose {
+    Item[] items;
+
+    public GildedRose(Item[] items) {
+        this.items = items;
+    }
+
+    public void updateQuality() {
+        for (Item item : items) {
+            updateItemQuality(item);
+        }
+    }
+
+    private static void updateItemQuality(Item item) {
+        ItemUpdater.forItem(item).update(item);
+    }
+}
+
 abstract class ItemUpdater {
     abstract void update(Item item);
+
+    static ItemUpdater forItem(Item item) {
+        boolean isAgedBrie = item.name.equals("Aged Brie");
+        boolean isBackstagePasses = item.name.equals("Backstage passes to a TAFKAL80ETC concert");
+        boolean isSulfuras = item.name.equals("Sulfuras, Hand of Ragnaros");
+
+        ItemUpdater updater;
+        if (isAgedBrie) {
+            updater = new AgedBrieUpdater();
+        } else if (isBackstagePasses) {
+            updater = new BackstagePassesUpdater();
+        } else if (isSulfuras) {
+            updater = new SulfurasUpdater();
+        } else if (item.name.equals("Conjured Mana Cake")) {
+            updater = new ConjuredUpdater();
+        } else {
+            updater = new OtherUpdater();
+        }
+        return updater;
+    }
 }
 
 class AgedBrieUpdater extends ItemUpdater {
@@ -73,40 +111,5 @@ class OtherUpdater extends ItemUpdater {
         }
 
         item.quality = Math.max(0, item.quality);
-    }
-}
-
-class GildedRose {
-    Item[] items;
-
-    public GildedRose(Item[] items) {
-        this.items = items;
-    }
-
-    public void updateQuality() {
-        for (Item item : items) {
-            updateItemQuality(item);
-        }
-    }
-
-    private static void updateItemQuality(Item item) {
-        boolean isAgedBrie = item.name.equals("Aged Brie");
-        boolean isBackstagePasses = item.name.equals("Backstage passes to a TAFKAL80ETC concert");
-        boolean isSulfuras = item.name.equals("Sulfuras, Hand of Ragnaros");
-
-        ItemUpdater updater;
-        if (isAgedBrie) {
-            updater = new AgedBrieUpdater();
-        } else if (isBackstagePasses) {
-            updater = new BackstagePassesUpdater();
-        } else if (isSulfuras) {
-            updater = new SulfurasUpdater();
-        } else if (item.name.equals("Conjured Mana Cake")) {
-            updater = new ConjuredUpdater();
-        } else {
-            updater = new OtherUpdater();
-        }
-
-        updater.update(item);
     }
 }
