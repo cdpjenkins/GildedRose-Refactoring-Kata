@@ -45,6 +45,22 @@ class SulfurasUpdater extends ItemUpdater {
     }
 }
 
+class ConjuredUpdater extends ItemUpdater {
+    @Override
+    void update(Item item) {
+        item.sellIn = item.sellIn - 1;
+
+        if (item.sellIn < 0) {
+            item.quality = item.quality - 4;
+        } else {
+            item.quality = item.quality - 2;
+        }
+
+        item.quality = Math.max(0, item.quality);
+
+    }
+}
+
 class OtherUpdater extends ItemUpdater {
     @Override
     void update(Item item) {
@@ -85,11 +101,12 @@ class GildedRose {
             updater = new BackstagePassesUpdater();
         } else if (isSulfuras) {
             updater = new SulfurasUpdater();
+        } else if (item.name.equals("Conjured Mana Cake")) {
+            updater = new ConjuredUpdater();
         } else {
             updater = new OtherUpdater();
         }
 
         updater.update(item);
     }
-
 }
