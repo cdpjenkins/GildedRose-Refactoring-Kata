@@ -1,5 +1,9 @@
 package com.gildedrose;
 
+// I've got bored of making further changes to Gilded Rose at this point. It's definitely tidier than what we started
+// with. And I made massive used of Emily Bache's trick for lifting conditions out of big nested ifs. Will definitely
+// remember that one.
+
 class GildedRose {
     Item[] items;
 
@@ -95,7 +99,6 @@ class ConjuredUpdater extends ItemUpdater {
         }
 
         item.quality = Math.max(0, item.quality);
-
     }
 }
 
