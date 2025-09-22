@@ -3,14 +3,16 @@ package com.gildedrose
 import kotlin.math.max
 import kotlin.math.min
 
-enum class ItemType {
-    SULFURAS {
-        override fun getUpdatedSellIn(item: Item): Int = item.sellIn
-        override fun getUpdatedQuality(item: Item): Int {
-            return item.quality
-        }
-    },
-    AGED_BRIE {
+abstract class ItemType {
+    open fun getUpdatedSellIn(item: Item): Int = item.sellIn - 1
+    abstract fun getUpdatedQuality(item: Item): Int
+
+    object Sulfuras : ItemType() {
+        override fun getUpdatedSellIn(item: Item) = item.sellIn
+        override fun getUpdatedQuality(item: Item) = item.quality
+    }
+
+    object AgedBrie : ItemType() {
         override fun getUpdatedQuality(item: Item): Int {
             val updatedQuality =
                 if (item.sellIn >= 0) item.quality + 1
@@ -18,8 +20,9 @@ enum class ItemType {
 
             return min(updatedQuality, 50)
         }
-    },
-    BACKSTAGE_PASSES {
+    }
+
+    object BackstagePasses : ItemType() {
         override fun getUpdatedQuality(item: Item): Int {
             val updatedQuality =
                 when {
@@ -31,8 +34,9 @@ enum class ItemType {
 
             return min(updatedQuality, 50)
         }
-    },
-    CONJURED {
+    }
+
+    object Conjured : ItemType() {
         override fun getUpdatedQuality(item: Item): Int {
             val updatedQuality =
                 if (item.sellIn < 0) item.quality - 4
@@ -40,8 +44,9 @@ enum class ItemType {
 
             return max(updatedQuality, 0)
         }
-    },
-    OTHER {
+    }
+
+    object Other : ItemType() {
         override fun getUpdatedQuality(item: Item): Int {
             val updatedQuality =
                 if (item.sellIn < 0) item.quality - 2
@@ -49,18 +54,15 @@ enum class ItemType {
 
             return max(updatedQuality, 0)
         }
-    };
-
-    open fun getUpdatedSellIn(item: Item): Int = item.sellIn - 1
-    abstract fun getUpdatedQuality(item: Item): Int
+    }
 
     companion object {
         fun of(name: String): ItemType =
-            if (name.startsWith("Sulfuras")) SULFURAS
-            else if (name.startsWith("Aged Brie")) AGED_BRIE
-            else if (name.startsWith("Backstage passes")) BACKSTAGE_PASSES
-            else if (name.startsWith("Conjured")) CONJURED
-            else OTHER
+            if (name.startsWith("Sulfuras")) Sulfuras
+            else if (name.startsWith("Aged Brie")) AgedBrie
+            else if (name.startsWith("Backstage passes")) BackstagePasses
+            else if (name.startsWith("Conjured")) Conjured
+            else Other
     }
 }
 
