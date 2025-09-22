@@ -1,5 +1,37 @@
 package com.gildedrose;
 
+abstract class ItemUpdater {
+    abstract void update(Item item);
+}
+
+class AgedBrieUpdater extends ItemUpdater {
+    @Override
+    void update(Item item) {
+        GildedRose.updateAgedBrie(item);
+    }
+}
+
+class BackstagePassesUpdater extends ItemUpdater {
+    @Override
+    void update(Item item) {
+        GildedRose.updateBackstagePasses(item);
+    }
+}
+
+class SulfurasUpdater extends ItemUpdater {
+    @Override
+    void update(Item item) {
+        GildedRose.updateSulfuras();
+    }
+}
+
+class OtherUpdater extends ItemUpdater {
+    @Override
+    void update(Item item) {
+        GildedRose.updateOther(item);
+    }
+}
+
 class GildedRose {
     Item[] items;
 
@@ -18,53 +50,72 @@ class GildedRose {
         boolean isBackstagePasses = item.name.equals("Backstage passes to a TAFKAL80ETC concert");
         boolean isSulfuras = item.name.equals("Sulfuras, Hand of Ragnaros");
 
+        ItemUpdater updater;
         if (isAgedBrie) {
-            if (item.quality < 50) {
-                item.quality = item.quality + 1;
+            updater = new AgedBrieUpdater();
+        } else if (isBackstagePasses) {
+            updater = new BackstagePassesUpdater();
+        } else if (isSulfuras) {
+            updater = new SulfurasUpdater();
+        } else {
+            updater = new OtherUpdater();
+        }
+
+        updater.update(item);
+    }
+
+    static void updateOther(Item item) {
+        if (item.quality > 0) {
+            item.quality = item.quality - 1;
+        }
+
+        item.sellIn = item.sellIn - 1;
+
+        if (item.sellIn < 0) {
+            if (item.quality > 0) {
+                item.quality = item.quality - 1;
             }
+        }
+    }
 
-            item.sellIn = item.sellIn - 1;
+    static void updateSulfuras() {
+        // do nothing
+    }
 
-            if (item.sellIn < 0) {
+    static void updateBackstagePasses(Item item) {
+        if (item.quality < 50) {
+            item.quality = item.quality + 1;
+
+            if (item.sellIn < 11) {
                 if (item.quality < 50) {
                     item.quality = item.quality + 1;
                 }
             }
-        } else if (isBackstagePasses) {
+
+            if (item.sellIn < 6) {
+                if (item.quality < 50) {
+                    item.quality = item.quality + 1;
+                }
+            }
+        }
+
+        item.sellIn = item.sellIn - 1;
+
+        if (item.sellIn < 0) {
+            item.quality = 0;
+        }
+    }
+
+    static void updateAgedBrie(Item item) {
+        if (item.quality < 50) {
+            item.quality = item.quality + 1;
+        }
+
+        item.sellIn = item.sellIn - 1;
+
+        if (item.sellIn < 0) {
             if (item.quality < 50) {
                 item.quality = item.quality + 1;
-
-                if (item.sellIn < 11) {
-                    if (item.quality < 50) {
-                        item.quality = item.quality + 1;
-                    }
-                }
-
-                if (item.sellIn < 6) {
-                    if (item.quality < 50) {
-                        item.quality = item.quality + 1;
-                    }
-                }
-            }
-
-            item.sellIn = item.sellIn - 1;
-
-            if (item.sellIn < 0) {
-                item.quality = 0;
-            }
-        } else if (isSulfuras) {
-            // do nothing
-        } else {
-            if (item.quality > 0) {
-                item.quality = item.quality - 1;
-            }
-
-            item.sellIn = item.sellIn - 1;
-
-            if (item.sellIn < 0) {
-                if (item.quality > 0) {
-                    item.quality = item.quality - 1;
-                }
             }
         }
     }
