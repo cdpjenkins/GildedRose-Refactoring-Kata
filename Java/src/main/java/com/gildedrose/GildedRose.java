@@ -18,35 +18,35 @@ class GildedRose {
     }
 
     private static void updateItemQuality(Item item) {
-        ItemUpdater.forItem(item).update(item);
+        UpdateStrategy.forItem(item).update(item);
     }
 }
 
-abstract class ItemUpdater {
+abstract class UpdateStrategy {
     abstract void update(Item item);
 
-    static ItemUpdater forItem(Item item) {
+    static UpdateStrategy forItem(Item item) {
         boolean isAgedBrie = item.name.equals("Aged Brie");
         boolean isBackstagePasses = item.name.equals("Backstage passes to a TAFKAL80ETC concert");
         boolean isSulfuras = item.name.equals("Sulfuras, Hand of Ragnaros");
 
-        ItemUpdater updater;
+        UpdateStrategy updater;
         if (isAgedBrie) {
-            updater = new AgedBrieUpdater();
+            updater = new AgedBrieUpdateStrategy();
         } else if (isBackstagePasses) {
-            updater = new BackstagePassesUpdater();
+            updater = new BackstagePassesUpdateStrategy();
         } else if (isSulfuras) {
-            updater = new SulfurasUpdater();
+            updater = new SulfurasUpdateStrategy();
         } else if (item.name.equals("Conjured Mana Cake")) {
-            updater = new ConjuredUpdater();
+            updater = new ConjuredUpdateStrategy();
         } else {
-            updater = new OtherUpdater();
+            updater = new DefaultUpdateStrategy();
         }
         return updater;
     }
 }
 
-class AgedBrieUpdater extends ItemUpdater {
+class AgedBrieUpdateStrategy extends UpdateStrategy {
     @Override
     void update(Item item) {
         item.sellIn = item.sellIn - 1;
@@ -61,7 +61,7 @@ class AgedBrieUpdater extends ItemUpdater {
     }
 }
 
-class BackstagePassesUpdater extends ItemUpdater {
+class BackstagePassesUpdateStrategy extends UpdateStrategy {
     @Override
     void update(Item item) {
         item.sellIn = item.sellIn - 1;
@@ -80,14 +80,14 @@ class BackstagePassesUpdater extends ItemUpdater {
     }
 }
 
-class SulfurasUpdater extends ItemUpdater {
+class SulfurasUpdateStrategy extends UpdateStrategy {
     @Override
     void update(Item item) {
         // do nothing
     }
 }
 
-class ConjuredUpdater extends ItemUpdater {
+class ConjuredUpdateStrategy extends UpdateStrategy {
     @Override
     void update(Item item) {
         item.sellIn = item.sellIn - 1;
@@ -102,7 +102,7 @@ class ConjuredUpdater extends ItemUpdater {
     }
 }
 
-class OtherUpdater extends ItemUpdater {
+class DefaultUpdateStrategy extends UpdateStrategy {
     @Override
     void update(Item item) {
         item.sellIn = item.sellIn - 1;
